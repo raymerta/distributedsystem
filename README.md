@@ -1,7 +1,9 @@
 # DISTRIBUTED SYSTEM : SIMPLE WEB SERVER FOR COLLABORATIVE EDITING
 
 To run the web server : 
-- run this : python server.py 
+- run this : 'python server.py'
+- open web browser, add 'localhost:'
+
 
 # SHARING STRATEGY : HANDLED BY SERVER
 
@@ -29,3 +31,6 @@ Nonetheless, you implementation has to meet some requirements and they are as fo
 3. Multiple users. The collaborative editor should allow at least three users to work simultaneously.
 4. Textual format. Allowing ASCII text and handling the line breaks.
 
+# REPORT : 
+
+https://docs.google.com/document/d/1nPhE3x0tfqcf2Pbwx75ydoIRqX2UgdxesulBsFERT7E/edit?usp=sharing
