@@ -9,7 +9,5 @@ def main():
     print >> sys.stderr, 'connecting to %s port %s' % serverAddress
     sock.connect(serverAddress)
 
-    
-
 if __name__ == '__main__':
     main()
