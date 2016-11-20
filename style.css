@@ -60,4 +60,5 @@ body {
 	-webkit-border-radius: 10px 10px 10px 10px;
 	border-radius: 10px 10px 10px 10px;
 	padding: 40px;
+	box-shadow: 0 5px 3px #6c53d2;
 }
