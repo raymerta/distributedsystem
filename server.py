@@ -2,6 +2,7 @@ import socket
 import threading
 import os
 import sys
+import webbrowser
 
 def main():
 	sock = socket.socket()
@@ -31,9 +32,15 @@ def main():
 		# 	sock.close()
 		# except: 
 		# 	print >> sys.stderr, 'other error'
+
+		pageUrl = conn.recv(1024)
+		
+	
+    		print 'rendering', pageUrl
+		webbrowser.open_new_tab(pageUrl)
     	     
 	sock.close()
-
+	
 
 if __name__ == '__main__':
     main()
