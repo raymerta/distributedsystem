@@ -95,6 +95,8 @@ def sendResponse(conn, content):
 # parse request
 def parseRequest(conn):
 	data = conn.recv(4096)
+	print data
+
 	if not data:
 		print >> sys.stderr, 'Bad request: no data'
 		return ''

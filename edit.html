@@ -3,17 +3,13 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css">
 		<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-		<script
-  src="http://code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script>
   		<script>tinymce.init({ selector:'textarea' });</script>
 	</head>
 	<body>
 		<div class="container">
 			<h1>COLLABORATIVE EDITING TOOLS</h1>
 			<textarea id="textarea">hello world</textarea>
-			<input type="submit" value="save" name="save" onclick="grabContent()"> <input type="submit" value="reset" name="reset">
+			<input type="submit" value="save" name="save" onclick="sendMessage()"> <input type="submit" value="reset" name="reset">
 		</div>
 	</body>
 
@@ -22,7 +18,7 @@
 		function sendMessage() {
 			var http = new XMLHttpRequest();
 			var url = "http://localhost:10001/edit/test";
-			var params = "lorem=ipsum&name=binny";
+			var params = "this is what I will send";
 			http.open("POST", url, true);
 
 			//Send the proper header information along with the request
@@ -43,14 +39,6 @@
 
 			alert(tinyMCE.activeEditor.getContent());
 
-// // Get the raw contents of the currently active editor
-// tinyMCE.activeEditor.getContent({format : 'raw'});
-
-// // Get content of a specific editor:
-// tinyMCE.get('content id').getContent()
-
-// 			var content =  tinyMCE.getContent('textarea');
-// 			alert(content);
 		}
 	</script>
 </html>
