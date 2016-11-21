@@ -84,8 +84,6 @@ def routingHandler(uri):
 	else: 
 		content = 'Hello world! Page not found'
 
-	print >> sys.stderr, '%s' % content
-
 	return (200, content, mime)
 
 # handling response, combining content
