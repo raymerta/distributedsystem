@@ -10,7 +10,7 @@ responseHeaders = {}
 responseHeaders[200] =\
 """HTTP/1.0 200 Okay
 Server: ws30
-Content-type: text/html
+Content-type: %s
 
 %s
 """
@@ -21,7 +21,7 @@ Server: ws30
 Content-type: text/plain
 Location: %s
 
-moved
+
 """
 
 responseHeaders[404] =\
@@ -31,6 +31,17 @@ Content-type: text/plain
 
 %s not found
 """
+
+# setting mime types
+mimeTypes = {
+	'.jpg': 'image/jpg',
+	'.gif': 'image/gif',
+	'.png': 'image/png',
+	'.html': 'text/html',
+	'.pdf': 'application/pdf',
+	'.css': 'text/css',
+	'.js': 'application/javascript'}
+
 
 # handling routing
 def routing(): 
@@ -44,34 +55,43 @@ def socketServer(serverAddress):
     sock.listen(5)
     return sock
 
+# getMime
+def getMime(uri):
+	return mimeTypes.get(os.path.splitext(uri)[1], 'text/plain')
+
 # handling routing TODO
 def routingHandler(uri):
 	addr = uri[1:].lower()
+	fsource = ''
+	content = ''
+	mime = 'text/html'
 
 	print >> sys.stderr, 'URI accessed trimmed : %s' % addr
-
-	content = ''
+	
 	if (addr == ''):
-		f = open('index.html', 'r')
-		content = f.read()
-		print >> sys.stderr, '%s' % content
+		fsource = 'index.html'
 	elif (addr == 'edit'):
-		f = open('edit.html', 'r')
-		content = f.read()
-		print >> sys.stderr, '%s' % content
+		fsource = 'edit.html'
 	elif (addr == 'main'):
-		f = open('main.html', 'r')
+		fsource = 'main.html'
+	elif (addr == 'style.css'):
+		fsource = 'style.css'		
+
+	if (fsource != ''):
+		f = open(fsource, 'r')
+		mime = getMime(fsource)
 		content = f.read()
-		print >> sys.stderr, '%s' % content
-	else:
+	else: 
 		content = 'Hello world! Page not found'
 
-	return (200, content)
+	print >> sys.stderr, '%s' % content
+
+	return (200, content, mime)
 
 # handling response, combining content
 def sendResponse(conn, content):
 	template = responseHeaders[content[0]]
-	data = template % content[1]
+	data = template % (content[2],content[1])
 	conn.sendall(data)
 
 # parse request
@@ -87,10 +107,12 @@ def parseRequest(conn):
 	print >> sys.stderr, 'Data collected: %s' % line
 
 	method, uri, protocol = line.split()
-
-
 	return uri
 
+
+# ===================================================================
+# main application here
+# ===================================================================
 def main():
 	serverAddress = ('localhost', 10001)
 	server = socketServer(serverAddress)
@@ -115,7 +137,7 @@ def main():
 			sendResponse(conn, content)
 
 			conn.close()
-	
+	# handling keyboard interrupt
 	except KeyboardInterrupt:
 		print >> sys.stderr, 'keyboardInterrupt exception'
 				
