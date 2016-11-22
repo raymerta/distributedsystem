@@ -6,7 +6,12 @@ import webbrowser
 import random
 import time
 
+# there's some problem with the parser
 from PDU import PDU
+
+
+
+serverAddress = ('localhost', 10001)
 
 # setting up response header
 responseHeaders = {}
@@ -21,12 +26,12 @@ Set-Cookie: %s
 """
 
 responseHeaders[301] =\
-"""HTTP/1.0 301 Moved
+"""HTTP/1.0 301 Move
 Server: ws30
-Content-type: text/plain
+Content-type: %s
 Location: %s
 
-
+%s
 """
 
 responseHeaders[404] =\
@@ -65,27 +70,26 @@ def socketServer(serverAddress):
     return sock	
 
 # handling routing TODO
-def routingHandler(pduResult, session):
+def routingHandler(pduResult, session, conn, addr):
 
 	# remove beginning /
-	addr = pduResult.uri
-	fsource = ''
+	addr = pduResult.uri.split('/')
+
 	content = ''
+	fsource = ''
 
 	#not working for god sake 
 	cookie = setCookie("__session", session)
 	mime = 'text/html'
-
-	print >> sys.stderr, 'URI accessed trimmed : %s' % addr
 	
-	if (addr == '/'):
+	if (addr[1] == ''):
 		fsource = 'index.html'
-	elif (addr == '/edit'):
+	elif (addr[1] == 'edit'):
 		fsource = 'edit.html'
-	elif (addr == '/main'):
+	elif (addr[1] == 'main'):
 		fsource = 'main.html'
-	elif (addr == '/style.css'):
-		fsource = 'style.css'
+	elif (addr[1] == 'style.css'):
+		fsource = 'main.html'
 
 	if (pduResult.req_type != "POST"):
 		if (fsource != ''):
@@ -95,24 +99,30 @@ def routingHandler(pduResult, session):
 			f.close()
 		else: 
 			content = 'Hello world! Page not found'
+
+		if (mime != "text/html"):
+			cookie = ''	
+
+		component = (200, content, mime, cookie)
+		sendResponse(conn, component)
+
 	else:
-		if (addr == '/createdoc'):
+		if (addr[1] == 'createdoc'):
 			createDocument(pduResult.content.strip(), "test-address")
-		if (addr == '/signin'):
-			handler
+		if (addr[1] == 'signin'):
 
-	if (mime != "text/html"):
-		cookie = ''
+			content = 'http://localhost:10001/main/%s' % pduResult.content.strip()
 
-	# customize return value if we have time
-	return (200, content, mime, cookie)
+			component = (200, content, mime, cookie)
+			sendResponse(conn, component)
+			
 
 
 # handling response, combining content
-def sendResponse(conn, content):
-	template = responseHeaders[content[0]]
-	data = template % (content[2], content[3], content[1])
+def sendResponse(conn, component):
+	template = responseHeaders[component[0]]
 
+	data = template % (component[2], component[3], component[1])
 	#print >> sys.stderr, 'send response data :'
 	#print >> sys.stderr, data
 
@@ -130,8 +140,6 @@ def parseRequest(conn):
 	
 	#print line
 	#header format = data[0:data.find("\r\n\r\n")]
-	print data
-
 	# print >> sys.stderr, "==================================================================="
 	# print >> sys.stderr, PDU(data)
 	# print >> sys.stderr, "==================================================================="
@@ -175,13 +183,11 @@ def handler(conn, addr, session):
 
 	# parsing uri request
 	pduResult = parseRequest(conn)
-	print >> sys.stderr, 'URI accessed : %s' % pduResult.uri
+	print pduResult
+	#print >> sys.stderr, 'URI accessed : %s' % pduResult.uri
 
 	# handling URI and print suitable pages
-	content = routingHandler(pduResult, session)
-
-	# send response
-	sendResponse(conn, content)
+	routingHandler(pduResult, session, conn, addr)
 
 	conn.close()
 
@@ -189,7 +195,7 @@ def handler(conn, addr, session):
 # main application here
 # ===================================================================
 def main():
-	serverAddress = ('localhost', 10001)
+	
 	server = socketServer(serverAddress)
 	print >> sys.stderr, 'server is starting on %s port %s' % serverAddress
 

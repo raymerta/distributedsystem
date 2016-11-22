@@ -1,62 +1,46 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="style.css">
+		<!-- <link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css"> -->
+		<link rel="stylesheet" type="text/css" href="/style.css">
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 	</head>
 	<body>
 		<div class="container">
-			<h1>COLLABORATIVE EDITING TOOLS</h1>
+			
+			<div class="title">
+				<h1>COLLABORATIVE EDITING TOOLS</h1>
+				<p>Hello, insert your username to start</p>
+			</div>
+
 			<table>
 				<tr>
-					<td>Username:</td>
+					<td style="width: 100px;">Username:</td>
 					<td><input id="signinUsername" type="text" name="username"/></td>
-				</tr>
-				<tr>
-					<td>Password:</td>
-					<td><input id="signinPass" type="password" name="username"/></td>
+					<td><input class="btn" type="submit" name="signin" value="START" onclick="signin()" style="margin-left: 20px;"></td>
 				</tr>
 			</table>
-			<input type="submit" name="signin" value="SIGN IN" onclick="signin()">
-
-			<p>...............</p>
-
-			<p>Don't have account yet?</p>
-
-			<table>
-				<tr>
-					<td>Username:</td>
-					<td><input  type="text" name="username"/></td>
-				</tr>
-				<tr>
-					<td>Password:</td>
-					<td><input  type="password" name="username"/></td>
-				</tr>
-			</table>
-			<input type="submit" name="signup" value="SIGN UP">
-
-			<p>...............</p>
-
-			<a href="http://localhost:10001/main">SKIP</a>
+			
 		</div>
 	</body>
 
 	<script type="text/javascript">
-		var username = document.getElementById("signinUsername").value;
-		var password = document.getElementById("signinPass").value;
-
-		if (username = "") {
-			username = "test"
-		}
 
 		function signin(){
 			var http = new XMLHttpRequest();
-			var url = "http://localhost:10001/login";
-			var params = username;
+			var url = "http://localhost:10001/signin";
+			var params = document.getElementById("signinUsername").value;;
 			http.open("POST", url, true);
 
 			//Send the proper header information along with the request
 			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+			http.onreadystatechange = function() {
+				if (http.readyState == 4 && http.status == 200) {
+					window.location = http.responseText;
+					document.cookie = "username = " + params;
+				}
+			}
 
 			http.send(params);
 		}

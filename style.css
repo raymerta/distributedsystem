@@ -114,4 +114,36 @@ body {
 	cursor: pointer;
 }
 
+.btn {
+	background: #00a2fd;
+	color: white;
+	padding: 12px 20px;
+	-webkit-border-radius: 7px;
+	border-radius: 7px;
+	box-shadow: 0 3px 3px #cfd8dd;
+	cursor: pointer;
+	border: none;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+}
+
+.nodoc {
+	background: #f4f8f9;
+	border: solid 1px #ced9dd;
+	-webkit-border-radius: 7px;
+	border-radius: 7px;
+	text-align: center;
+	padding: 20px;
+}
+
+#signinUsername {
+	width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
 

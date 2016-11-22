@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="style.css">
+		<!-- <link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css"> -->
+		<link rel="stylesheet" type="text/css" href="/style.css">
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 	</head>
 	<body>
@@ -9,7 +10,7 @@
 			<div class="title">
 				<div class="title-left">
 					<h1>COLLABORATIVE EDITING TOOLS</h1>
-					<p>Hello, <span>User</span> welcome to collaborative editing tools</p>
+					<p>Hello, <span id="username">User</span> welcome to collaborative editing tools</p>
 				</div>
 				<div class="title-right">
 					<div class="newdoc" onclick="createDocument()"> NEW DOCUMENT</div>
@@ -22,6 +23,8 @@
 	</body>
 
 	<script type="text/javascript">
+		document.getElementById("username").innerHTML = document.cookie.split("=")[1];
+
 		function createDocument() {
 			var http = new XMLHttpRequest();
 			var url = "http://localhost:10001/createdoc";
