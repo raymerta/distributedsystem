@@ -48,11 +48,11 @@ class PDU:
     	res += "\n"
     	res +=  self.data_split[7].split()[1]
     	res += "\n"
-    	res += "REF: " + self.data_split[8].split()[1]
+    	res += "REF: " + self.data_split[8]
     	res += "\n"
-        res += "ENC: " + self.data_split[9].split()[1]
-    	res += "\n"
-        res += "LENG: " + self.data_split[10].split()[1]
+        res += "ENC: " + self.data_split[9]
+        res += "\n"
+        res += "LENG: " + self.data_split[10]
         res += "\n"
         res += "CONTETNT :" + self.content
         
