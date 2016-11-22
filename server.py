@@ -63,8 +63,10 @@ def socketServer(serverAddress):
     return sock
 
 # handling routing TODO
-def routingHandler(uri):
-	addr = uri[1:].lower()
+def routingHandler(pduResult):
+
+	# remove beginning /
+	addr = pduResult.uri[1:].lower()
 	fsource = ''
 	content = ''
 	mime = 'text/html'
@@ -78,14 +80,19 @@ def routingHandler(uri):
 	elif (addr == 'main'):
 		fsource = 'main.html'
 	elif (addr == 'style.css'):
-		fsource = 'style.css'		
+		fsource = 'style.css'
 
-	if (fsource != ''):
-		f = open(fsource, 'r')
-		mime = getMime(fsource)
-		content = f.read()
-	else: 
-		content = 'Hello world! Page not found'
+	if (pduResult.req_type != "POST"):
+		if (fsource != ''):
+			f = open(fsource, 'r')
+			mime = getMime(fsource)
+			content = f.read()
+			f.close()
+		else: 
+			content = 'Hello world! Page not found'
+	else:
+		if (addr == 'createdoc'):
+			createDocument(pduResult.content.strip(), "test-address")
 
 	return (200, content, mime)
 
@@ -116,11 +123,19 @@ def parseRequest(conn):
 
 	return PDU(data)
 
-def createDocument(name, address):
-	return null
+def createDocument(name, address):	
+	# default response is ok
+	response = 200
+
+	# try catch 
+	try:
+		f = open("files/%s-%s.txt" % (name, address), "w+")
+		f.close()
+	except:
+		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
 
 def openDocument(doc):
-	return null
+	return 
 
 # ===================================================================
 # main application here
@@ -142,8 +157,11 @@ def main():
 			pduResult = parseRequest(conn)
 			print >> sys.stderr, 'URI accessed : %s' % pduResult.uri
 
+			# finding request type
+			print >> sys.stderr, 'Access type : %s' % pduResult.req_type
+
 			# handling URI and print suitable pages
-			content = routingHandler(pduResult.uri)
+			content = routingHandler(pduResult)
 
 			# send response
 			sendResponse(conn, content)

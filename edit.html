@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css">
+		<link rel="stylesheet" type="text/css" href="style.css">
 		<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-  		<script>tinymce.init({ selector:'textarea' });</script>
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  		<script type="text/javascript">
+  			tinymce.init({ 
+  				selector:'textarea',
+  				height: 300
+  			});
+  		</script>
 	</head>
 	<body>
 		<div class="container">
-			<h1>COLLABORATIVE EDITING TOOLS</h1>
+			<div class="title">
+				<h1>COLLABORATIVE EDITING TOOLS</h1>
+				<p>Hello, <span>User</span> welcome to collaborative editing tools</p>
+			</div>
+
 			<textarea id="textarea">hello world</textarea>
 			<input type="submit" value="save" name="save" onclick="sendMessage()"> <input type="submit" value="reset" name="reset">
 		</div>

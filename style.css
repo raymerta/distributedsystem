@@ -47,11 +47,29 @@ table {
 	border-spacing: 0;
 }
 
+/* clearfix */
+
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+     }
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
+
 /* my own style here */
 
 body {
 	background: #7d5aff;
 	padding: 30px;
+	font-family: 'Open Sans', sans-serif;
+	color: #658699;
 }
 
 .container {
@@ -59,6 +77,41 @@ body {
 	background: #fefefe;
 	-webkit-border-radius: 10px 10px 10px 10px;
 	border-radius: 10px 10px 10px 10px;
-	padding: 40px;
+	padding: 40px 50px;
 	box-shadow: 0 5px 3px #6c53d2;
 }
+
+.container h1 {
+	font-weight: bold;
+	font-size: 30px;
+	color: #4206f4;
+}
+
+.title p {
+	margin: 20px 0;
+}
+
+.title p span {
+	color: #4206f4;
+	font-weight: bold;	
+}
+
+.title-left{
+	float: left;
+}
+
+.title-right{
+	float: right;
+}
+
+.newdoc {
+	background: #00a2fd;
+	color: white;
+	padding: 20px;
+	-webkit-border-radius: 7px;
+	border-radius: 7px;
+	box-shadow: 0 3px 3px #cfd8dd;
+	cursor: pointer;
+}
+
+

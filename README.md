@@ -2,7 +2,11 @@
 
 To run the web server : 
 - run this : 'python server.py'
-- open web browser, add 'localhost:'
+- open web browser, add 'localhost:10001'
+
+
+IMPORTANT :
+- ensure it's connected to internet since some frontend plugin (tinymce for text editor)
 
 
 # SHARING STRATEGY : HANDLED BY SERVER
@@ -52,6 +56,11 @@ Client side :
 		- receiving document content
 	- editing logic
 
+Nice to have : 
+	- keep all header file in one place to avoid copy paste
+
+Caveats :
+	- cross-site Access-Control requests should be made using credentials such as cookies, authorization headers or TLS client certificates
 
 # REQUIREMENTS : 
 

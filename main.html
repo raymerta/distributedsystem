@@ -2,12 +2,38 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 	</head>
 	<body>
 		<div class="container">
-			<h1>COLLABORATIVE EDITING TOOLS</h1>
-			<p>List of your document</p>
-			<a href="#">Create New Documents</a>
+			<div class="title">
+				<div class="title-left">
+					<h1>COLLABORATIVE EDITING TOOLS</h1>
+					<p>Hello, <span>User</span> welcome to collaborative editing tools</p>
+				</div>
+				<div class="title-right">
+					<div class="newdoc" onclick="createDocument()"> NEW DOCUMENT</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+
+			<div class="nodoc">You Have No Document Here, Click Here to create one</div>
 		</div>
 	</body>
+
+	<script type="text/javascript">
+		function createDocument() {
+			var http = new XMLHttpRequest();
+			var url = "http://localhost:10001/createdoc";
+			var params = "newdoc"; //sending credentials
+
+			http.withCredentials = true;
+			http.open("POST", url, true);
+
+			//Send the proper header information along with the request
+			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+			http.send(params);
+		}
+	</script>
 </html>

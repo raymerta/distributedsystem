@@ -11,7 +11,7 @@ class PDU:
     	self.content_length = data_split[3].split()[1]
     	self.origin = data_split[4].split()[1]
     	self.user_agent = "".join(data_split[5].split()[1:])
-    	self.contetnt_type = data_split[6].split()[1]
+    	self.content_type = data_split[6].split()[1]
     	self.accept = data_split[7].split()[1]
     	self.referer = data_split[8]
     	self.accept_encoding = data_split[9]

