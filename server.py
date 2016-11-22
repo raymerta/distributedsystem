@@ -4,6 +4,8 @@ import os
 import sys
 import webbrowser
 
+from PDU import PDU
+
 # setting up response header
 responseHeaders = {}
 
@@ -95,16 +97,22 @@ def sendResponse(conn, content):
 # parse request
 def parseRequest(conn):
 	data = conn.recv(4096)
-	print data
+	print 
 
 	if not data:
 		print >> sys.stderr, 'Bad request: no data'
 		return ''
+
 	line = data[0:data.find("\r")]
 	
 	#print line
 	#header format = data[0:data.find("\r\n\r\n")]
-	print >> sys.stderr, 'Data collected: %s' % line
+	print >> sys.stderr
+	print >> sys.stderr, "start line "
+	print >> sys.stderr, PDU(data)
+	print >> sys.stderr, "end"
+	print >> sys.stderr
+	
 
 	method, uri, protocol = line.split()
 	return uri

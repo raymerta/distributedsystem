@@ -18,26 +18,21 @@
 		function sendMessage() {
 			var http = new XMLHttpRequest();
 			var url = "http://localhost:10001/edit/test";
-			var params = "this is what I will send";
+			var params = tinyMCE.activeEditor.getContent(); // grab the content
 			http.open("POST", url, true);
 
 			//Send the proper header information along with the request
 			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-			http.onreadystatechange = function() {//Call a function when the state changes.
-			    if(http.readyState == 4 && http.status == 200) {
-			        alert(http.responseText);
-			    }
-			}
 			http.send(params);
 		}
 
 		function grabContent() {
 
 			// Get the HTML contents of the currently active editor
-			console.debug(tinyMCE.activeEditor.getContent());
+			// console.debug(tinyMCE.activeEditor.getContent());
 
-			alert(tinyMCE.activeEditor.getContent());
+			// alert(tinyMCE.activeEditor.getContent());
 
 		}
 	</script>
