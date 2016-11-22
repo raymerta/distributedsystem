@@ -3,23 +3,6 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-		<script type="text/javascript">
-			function sendingCredentials() {
-				var http = new XMLHttpRequest();
-				var url = "http://localhost:10001/creds";
-				var params = document.cookie; //sending credentials
-
-				http.withCredentials = true;
-				http.open("POST", url, true);
-
-				//Send the proper header information along with the request
-				http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-				http.send(params);
-			}
-
-			sendingCredentials();
-		</script>
 	</head>
 	<body>
 		<div class="container">
@@ -27,14 +10,14 @@
 			<table>
 				<tr>
 					<td>Username:</td>
-					<td><input type="text" name="username"/></td>
+					<td><input id="signinUsername" type="text" name="username"/></td>
 				</tr>
 				<tr>
 					<td>Password:</td>
-					<td><input type="password" name="username"/></td>
+					<td><input id="signinPass" type="password" name="username"/></td>
 				</tr>
 			</table>
-			<input type="submit" name="signin" value="SIGN IN">
+			<input type="submit" name="signin" value="SIGN IN" onclick="signin()">
 
 			<p>...............</p>
 
@@ -43,20 +26,39 @@
 			<table>
 				<tr>
 					<td>Username:</td>
-					<td><input type="text" name="username"/></td>
+					<td><input  type="text" name="username"/></td>
 				</tr>
 				<tr>
 					<td>Password:</td>
-					<td><input type="password" name="username"/></td>
+					<td><input  type="password" name="username"/></td>
 				</tr>
 			</table>
 			<input type="submit" name="signup" value="SIGN UP">
 
 			<p>...............</p>
 
-			<a href="#">SKIP</a>
+			<a href="http://localhost:10001/main">SKIP</a>
 		</div>
 	</body>
 
+	<script type="text/javascript">
+		var username = document.getElementById("signinUsername").value;
+		var password = document.getElementById("signinPass").value;
 
+		if (username = "") {
+			username = "test"
+		}
+
+		function signin(){
+			var http = new XMLHttpRequest();
+			var url = "http://localhost:10001/login";
+			var params = username;
+			http.open("POST", url, true);
+
+			//Send the proper header information along with the request
+			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+			http.send(params);
+		}
+	</script>
 </html>
