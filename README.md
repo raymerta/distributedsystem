@@ -21,6 +21,24 @@ existing.
 Asynchronous or lock-free strategies (using document versions)
 	- Version control is required
 
+//to be filled with Operation Transform
+
+# TODO LIST
+
+Server side - Python
+	- establish connection
+	- receive updates
+	- send response
+	- locking logic
+	- mergin logic
+
+Client side
+	- establish connection
+	- send updates
+	- receive updates
+	- editing logic
+
+
 # REQUIREMENTS : 
 
 Nonetheless, you implementation has to meet some requirements and they are as follows:
