@@ -17,13 +17,13 @@ IMPORTANT :
 
 Server stores all the documents, the clients do create new documents or modify
 existing.
-	* Clients cannot edit the document off-line
-	* All the concurrency and editing conflicts are resolved by server
-	* Server maintains the ownership/permissions:
+* Clients cannot edit the document off-line
+* All the concurrency and editing conflicts are resolved by server
+* Server maintains the ownership/permissions:
 
-		//to be filled
-		- what document is allowed to be edited by which clients,
-		- who is the owner of what document.
+	//to be filled
+	- what document is allowed to be edited by which clients,
+	- who is the owner of what document.
 
 
 Asynchronous or lock-free strategies (using document versions)
@@ -35,38 +35,38 @@ Asynchronous or lock-free strategies (using document versions)
 
 
 Server side - Python :
-	* [DONE] establish connection
-	* receive updates
-		* convert string received into object
-		* routing request to its respective functionality
-	* send response
-	* routing logic. List of route : 
-		* POST create document
-		* GET document content
-	* locking logic
-	* mergin logic
+* [DONE] establish connection
+* receive updates
+	* convert string received into object
+	* routing request to its respective functionality
+* send response
+* routing logic. List of route : 
+	* POST create document
+	* GET document content
+* locking logic
+* mergin logic
 
 
 Client side :
-	* [DONE] establish connection 
-	* send updates
-		* [DONE] sending identity
-		* creating document
-		* asking to open document
-	* receive updates
-		* receiving ack that document is created
-		* receiving ack that document can be opened
-		* receiving document content
-	* editing logic
+* [DONE] establish connection 
+* send updates
+	* [DONE] sending identity
+	* creating document
+	* asking to open document
+* receive updates
+	* receiving ack that document is created
+	* receiving ack that document can be opened
+	* receiving document content
+* editing logic
 
 Nice to have / can be severe problem later: 
-	* refactor PDU.py since data split length is uncertain
-	* keep all header file in one place to avoid copy paste
-	* restrict username character and size
-	* restrict hotlinking to certain URL
+* refactor PDU.py since data split length is uncertain
+* keep all header file in one place to avoid copy paste
+* restrict username character and size
+* restrict hotlinking to certain URL
 
 Caveats :
-	* cross-site Access-Control requests should be made using credentials such as cookies, authorization headers or TLS client certificates
+* cross-site Access-Control requests should be made using credentials such as cookies, authorization headers or TLS client certificates
 
 
 # REQUIREMENTS : 
