@@ -25,17 +25,31 @@ Asynchronous or lock-free strategies (using document versions)
 
 # TODO LIST
 
-Server side - Python
-	- establish connection
+
+Server side - Python :
+	- [DONE] establish connection
 	- receive updates
+		- convert string received into object
+		- routing request to its respective functionality
 	- send response
+	- routing logic. List of route : 
+		- POST create document
+		- GET document content
 	- locking logic
 	- mergin logic
 
-Client side
-	- establish connection
+
+Client side :
+	- [DONE] establish connection 
 	- send updates
+		- establishing session
+		- sending identity
+		- creating document
+		- asking to open document
 	- receive updates
+		- receiving ack that document is created
+		- receiving ack that document can be opened
+		- receiving document content
 	- editing logic
 
 

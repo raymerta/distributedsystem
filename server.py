@@ -34,6 +34,8 @@ Content-type: text/plain
 %s not found
 """
 
+# TODO Handling local CSS and Javascript file
+
 # setting mime types
 mimeTypes = {
 	'.jpg': 'image/jpg',
@@ -44,6 +46,9 @@ mimeTypes = {
 	'.css': 'text/css',
 	'.js': 'application/javascript'}
 
+# getMime
+def getMime(uri):
+	return mimeTypes.get(os.path.splitext(uri)[1], 'text/plain')
 
 # handling routing
 def routing(): 
@@ -56,10 +61,6 @@ def socketServer(serverAddress):
     sock.bind(serverAddress)
     sock.listen(5)
     return sock
-
-# getMime
-def getMime(uri):
-	return mimeTypes.get(os.path.splitext(uri)[1], 'text/plain')
 
 # handling routing TODO
 def routingHandler(uri):
@@ -108,15 +109,18 @@ def parseRequest(conn):
 	#print line
 	#header format = data[0:data.find("\r\n\r\n")]
 	print >> sys.stderr
-	print >> sys.stderr, "start line "
+	print >> sys.stderr, "==================================================================="
 	print >> sys.stderr, PDU(data)
-	print >> sys.stderr, "end"
-	print >> sys.stderr
-	
+	print >> sys.stderr, "==================================================================="
+	print >> sys.stderr	
 
-	method, uri, protocol = line.split()
-	return uri
+	return PDU(data)
 
+def createDocument(name, address):
+	return null
+
+def openDocument(doc):
+	return null
 
 # ===================================================================
 # main application here
@@ -135,11 +139,11 @@ def main():
 			print >> sys.stderr, 'client connected with ip :  %s' % str(addr)
 			
 			# parsing uri request
-			uri = parseRequest(conn)
-			print >> sys.stderr, 'URI accessed : %s' % uri
+			pduResult = parseRequest(conn)
+			print >> sys.stderr, 'URI accessed : %s' % pduResult.uri
 
 			# handling URI and print suitable pages
-			content = routingHandler(uri)
+			content = routingHandler(pduResult.uri)
 
 			# send response
 			sendResponse(conn, content)
