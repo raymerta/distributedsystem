@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<!-- <link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css"> -->
-		<link rel="stylesheet" type="text/css" href="/style.css">
+		<link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css">
+		<!-- <link rel="stylesheet" type="text/css" href="/style.css"> -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 	</head>
 	<body>
@@ -18,12 +18,14 @@
 				<div class="clearfix"></div>
 			</div>
 
-			<div class="nodoc">You Have No Document Here, Click Here to create one</div>
+			<div class="nodoc">You Have No Document Here, Click NEW DOCUMENT to create one</div>
 		</div>
 	</body>
 
 	<script type="text/javascript">
 		document.getElementById("username").innerHTML = document.cookie.split("=")[1];
+
+		
 
 		function createDocument() {
 			var http = new XMLHttpRequest();

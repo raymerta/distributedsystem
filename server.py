@@ -109,9 +109,16 @@ def routingHandler(pduResult, session, conn, addr):
 	else:
 		if (addr[1] == 'createdoc'):
 			createDocument(pduResult.content.strip(), "test-address")
+
+
 		if (addr[1] == 'signin'):
 
-			content = 'http://localhost:10001/main/%s' % pduResult.content.strip()
+			username = pduResult.content.strip().lower()
+			content = 'http://localhost:10001/main/%s' % username 
+
+			#create folder of the user if previously not exist
+			if not os.path.exists("files/" + username):
+				os.makedirs("files/" + username)
 
 			component = (200, content, mime, cookie)
 			sendResponse(conn, component)
