@@ -5,12 +5,12 @@
 		<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 		<link rel="shortcut icon" href="http://parallemon.com/favicon.ico">
-  		<script type="text/javascript">
-  			tinymce.init({ 
+  		<!-- <script type="text/javascript">
+  			tinymce.init({
   				selector:'textarea',
   				height: 300
   			});
-  		</script>
+  		</script> -->
 	</head>
 	<body>
 		<div class="container">
@@ -26,11 +26,18 @@
 				<div class="clearfix"></div>
 			</div>
 
-			<textarea id="textarea"></textarea>
+			<textarea onkeydown="onKeyDown()"></textarea>
 		</div>
 	</body>
 
 	<script type="text/javascript">
+
+		function onKeyDown() {
+			var keyCode = event.keyCode;
+			var isBackspaceOrDelete = (keyCode >= 8) || (keyCode <= 126);
+			var isletterNumberOrSpecialChar = (keyCode >= 33) && (keyCode <= 126);
+
+		}
 
 		var username = document.cookie.split("=")[1];
 		document.getElementById("username").innerHTML = username;
@@ -47,7 +54,11 @@
 			http.onreadystatechange = function() {
 				if (http.readyState == 4 && http.status == 200) {
 					var content = http.responseText + "";
-					tinyMCE.activeEditor.setContent(http.responseText);
+					console.log("httpresponsetext")
+					console.log(http.responseText)
+					console.log("stringify content");
+					console.log(content);
+					tinyMCE.activeEditor.setContent(content);
 				}
 			}
 
@@ -64,6 +75,8 @@
 			//Send the proper header information along with the request
 			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
+			console.log("content that will be sent");
+			console.log(params);
 			//capture success response
 			http.onreadystatechange = function() {
 				if (http.readyState == 4 && http.status == 200) {

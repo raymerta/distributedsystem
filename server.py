@@ -67,7 +67,7 @@ def socketServer(serverAddress):
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(serverAddress)
     sock.listen(5)
-    return sock	
+    return sock
 
 # handling routing TODO
 def routingHandler(pduResult, session, conn, addr):
@@ -78,10 +78,10 @@ def routingHandler(pduResult, session, conn, addr):
 	content = ''
 	fsource = ''
 
-	#not working for god sake 
+	#not working for god sake
 	cookie = setCookie("__session", session)
 	mime = 'text/html'
-	
+
 
 	# home page
 	if (addr[1] == ''):
@@ -105,7 +105,7 @@ def routingHandler(pduResult, session, conn, addr):
 		component = (200, content, mime, cookie)
 		sendResponse(conn, component)
 
-	# main page 
+	# main page
 	if (addr[1] == 'main'):
 		fsource = 'main.html'
 		f = open(fsource, 'r')
@@ -128,7 +128,7 @@ def routingHandler(pduResult, session, conn, addr):
 		sendResponse(conn, component)
 
 	# get files inside folder
-	if (addr[1] == '_folder'):		
+	if (addr[1] == '_folder'):
 		username = addr[2]
 		content = getAllFiles()
 
@@ -141,13 +141,15 @@ def routingHandler(pduResult, session, conn, addr):
 		content = getDocContent(docname)
 
 		component = (200, content, "text/plain", cookie)
-		sendResponse(conn, component)		
+		sendResponse(conn, component)
 
 
 	if (addr[1] == 'docedit'):
 		username = addr[2]
 		docname = addr[3]
+
 		doc = pduResult.content.strip()
+
 		content = content = 'http://localhost:10001/main/%s' % username
 		editContent(docname, doc)
 
@@ -196,7 +198,7 @@ def parseRequest(conn):
 		return ''
 
 	line = data[0:data.find("\r")]
-	
+
 	#print line
 	#header format = data[0:data.find("\r\n\r\n")]
 	# print >> sys.stderr, "==================================================================="
@@ -213,7 +215,7 @@ def setSession():
 
 def setCookie(name, content):
 	# sample: Set-Cookie: id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly
-	expiresYear = int(time.strftime("%Y")) + 10 
+	expiresYear = int(time.strftime("%Y")) + 10
 	expiresMonth = time.strftime("%a, %d %b")
 	expiresTime = time.strftime("%X")
 
@@ -253,7 +255,7 @@ def getDocContent(filename):
 
 def editContent(filename, content):
 	try:
-		f = open("files/communal/%s.txt" % filename, 'r+')
+		f = open("files/communal/%s.txt" % filename, 'w')
 		f.write(content)
 		f.close()
 	except:
@@ -265,8 +267,8 @@ def createFolder(username):
 		os.makedirs("files/" + username)
 
 
-def createDocument(username, name):	
-	# try catch 
+def createDocument(username, name):
+	# try catch
 	try:
 		f = open("files/communal/%s-%s.txt" % (name, username), "w+")
 		f.close()
@@ -276,7 +278,7 @@ def createDocument(username, name):
 	except:
 		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
 
-# get all files inside folder	
+# get all files inside folder
 def getAllFiles():
 
 	files = []
@@ -287,26 +289,26 @@ def getAllFiles():
 	return str(files).strip('[]')
 
 def openDocument(doc):
-	return 
+	return
 
 
 # ===================================================================
 # main application here
 # ===================================================================
 def main():
-	
+
 	server = socketServer(serverAddress)
 	print >> sys.stderr, 'server is starting on %s port %s' % serverAddress
 
-	#connected		
-	try:	
-		while True: 	
+	#connected
+	try:
+		while True:
 			conn, addr = server.accept()
 			session = setSession()
 
 			# checking connected client ip address
 			print >> sys.stderr, 'client connected with ip :  %s' % str(addr)
-	
+
 			#start threading
 			thrd = threading.Thread(target=handler, args=(conn, addr, session))
 
@@ -319,10 +321,10 @@ def main():
 	# handling keyboard interrupt
 	except KeyboardInterrupt:
 		print >> sys.stderr, 'keyboardInterrupt exception'
-				
-    	     
+
+
 	server.close()
-	
+
 
 if __name__ == '__main__':
     main()
