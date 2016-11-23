@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css">
-		<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+		<!-- <script src="//cdn.tinymce.com/4/tinymce.min.js"></script> -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 		<link rel="shortcut icon" href="http://parallemon.com/favicon.ico">
   		<!-- <script type="text/javascript">
@@ -39,9 +39,8 @@
 			var isNumber = (keyCode >= 48) && (keyCode <= 57);
 			var isSpecialCharacter = (keyCode == 32) && (keyCode == 13); //space and enter
 			var index = document.getElementById("textarea").selectionStart;
-			console.log(index);
 			if (isBackspaceOrDelete || isLetter || isNumber || isSpecialCharacter) {
-
+				 sendMessage();
 			}
 		}
 
@@ -64,25 +63,30 @@
 					console.log(http.responseText)
 					console.log("stringify content");
 					console.log(content);
-					tinyMCE.activeEditor.setContent(content);
+					//tinyMCE.activeEditor.setContent(content);
+				  document.getElementById('textarea').value = content
 				}
 			}
 
 			http.send();
 		}
 
-		function sendMessage() {
-
+		// if the char equals to "", it means deletion in position index
+		// otherwise it's insertion
+		function sendMessage(index, char="") {
+			// var index = 1;
+			// var char = 'A';
 			var http = new XMLHttpRequest();
 			var url = "http://localhost:10001/docedit/" + username + "/" + docname;
-			var params = tinyMCE.activeEditor.getContent(); // grab the content
+			//var params = tinyMCE.activeEditor.getContent(); // grab the content
 			http.open("POST", url, true);
 
 			//Send the proper header information along with the request
 			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
+			otMessage = index + " " + char // Operation Transformation Message
 			console.log("content that will be sent");
-			console.log(params);
+			console.log(otMessage);
 			//capture success response
 			http.onreadystatechange = function() {
 				if (http.readyState == 4 && http.status == 200) {
@@ -90,7 +94,7 @@
 				}
 			}
 
-			http.send(params);
+			http.send(otMessage);
 		}
 
 		getContent();
