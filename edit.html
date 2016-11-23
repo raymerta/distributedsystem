@@ -82,11 +82,7 @@
 			http.onreadystatechange = function() {
 				if (http.readyState == 4 && http.status == 200) {
 					var content = http.responseText + "";
-					console.log("httpresponsetext")
-					console.log(http.responseText)
-					console.log("stringify content");
-					console.log(content);
-					//tinyMCE.activeEditor.setContent(content);
+						//tinyMCE.activeEditor.setContent(content);
 				  document.getElementById('textarea').value = content
 				}
 			}
@@ -113,14 +109,16 @@
 			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 			otMessage = index + " " + char // Operation Transformation Message
-			console.log("content that will be sent");
-			console.log(otMessage);
 			//capture success response
+
 			http.onreadystatechange = function() {
-				if (http.readyState == 4 && http.status == 200) {
-					window.location = http.responseText;
+				if (http.readyState == 4 && http.status != 200) {
+					console.log("error occurred " + index + " " + char)
+					sendMessage(index, char);
 				}
 			}
+
+			
 
 			http.send(otMessage);
 		}
