@@ -26,7 +26,7 @@
 				<div class="clearfix"></div>
 			</div>
 
-			<textarea onkeydown="onKeyDown()"></textarea>
+			<textarea id="textarea" onkeydown="onKeyDown()"></textarea>
 		</div>
 	</body>
 
@@ -34,9 +34,15 @@
 
 		function onKeyDown() {
 			var keyCode = event.keyCode;
-			var isBackspaceOrDelete = (keyCode >= 8) || (keyCode <= 126);
-			var isletterNumberOrSpecialChar = (keyCode >= 33) && (keyCode <= 126);
+			var isBackspaceOrDelete = (keyCode == 8) || (keyCode == 46);
+			var isLetter = (keyCode >= 65) && (keyCode <= 90);
+			var isNumber = (keyCode >= 48) && (keyCode <= 57);
+			var isSpecialCharacter = (keyCode == 32) && (keyCode == 13); //space and enter
+			var index = document.getElementById("textarea").selectionStart;
+			console.log(index);
+			if (isBackspaceOrDelete || isLetter || isNumber || isSpecialCharacter) {
 
+			}
 		}
 
 		var username = document.cookie.split("=")[1];
