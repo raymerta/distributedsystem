@@ -5,8 +5,9 @@ To run the web server :
 * open web browser, add 'localhost:10001'
 * insert username here, if the username not exist before, username folder will be created
 * enter dashboard for each user, create document or select dodument
-* IF CREATE DOCUMENT : blah
-* IF SELECT DOCUMENT : blah
+* to create document, select NEW DOCUMENT button and type document name, you will be redirected to edit page
+* to edit document, click EDIT button on the document list
+* to save the document, just pick QUIT EDITING
 
 
 IMPORTANT :
