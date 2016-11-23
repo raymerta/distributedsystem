@@ -57,9 +57,9 @@ mimeTypes = {
 def getMime(uri):
 	return mimeTypes.get(os.path.splitext(uri)[1], 'text/plain')
 
-# handling routing
-def routing(): 
-	return null
+# ===================================================================
+# networking section
+# ===================================================================
 
 # socketServer handling
 def socketServer(serverAddress):
@@ -82,48 +82,96 @@ def routingHandler(pduResult, session, conn, addr):
 	cookie = setCookie("__session", session)
 	mime = 'text/html'
 	
+
+	# home page
 	if (addr[1] == ''):
 		fsource = 'index.html'
-	elif (addr[1] == 'edit'):
-		fsource = 'edit.html'
-	elif (addr[1] == 'main'):
-		fsource = 'main.html'
-	elif (addr[1] == 'style.css'):
-		fsource = 'main.html'
-
-	if (pduResult.req_type != "POST"):
-		if (fsource != ''):
-			f = open(fsource, 'r')
-			mime = getMime(fsource)
-			content = f.read()
-			f.close()
-		else: 
-			content = 'Hello world! Page not found'
-
-		if (mime != "text/html"):
-			cookie = ''	
+		f = open(fsource, 'r')
+		mime = getMime(fsource)
+		content = f.read()
+		f.close()
 
 		component = (200, content, mime, cookie)
 		sendResponse(conn, component)
 
-	else:
-		if (addr[1] == 'createdoc'):
-			createDocument(pduResult.content.strip(), "test-address")
+	# edit page style
+	if (addr[1] == 'edit'):
+		fsource = 'edit.html'
+		f = open(fsource, 'r')
+		mime = getMime(fsource)
+		content = f.read()
+		f.close()
 
+		component = (200, content, mime, cookie)
+		sendResponse(conn, component)
 
-		if (addr[1] == 'signin'):
+	# main page 
+	if (addr[1] == 'main'):
+		fsource = 'main.html'
+		f = open(fsource, 'r')
+		mime = getMime(fsource)
+		content = f.read()
+		f.close()
 
-			username = pduResult.content.strip().lower()
-			content = 'http://localhost:10001/main/%s' % username 
+		component = (200, content, mime, cookie)
+		sendResponse(conn, component)
 
-			#create folder of the user if previously not exist
-			if not os.path.exists("files/" + username):
-				os.makedirs("files/" + username)
+	# css
+	if (addr[1] == 'style.css'):
+		fsource = 'style.css'
+		f = open(fsource, 'r')
+		mime = getMime(fsource)
+		content = f.read()
+		f.close()
 
-			component = (200, content, mime, cookie)
-			sendResponse(conn, component)
-			
+		component = (200, content, mime, cookie)
+		sendResponse(conn, component)
 
+	# get files inside folder
+	if (addr[1] == '_folder'):		
+		username = addr[2]
+		content = getAllFiles()
+
+		component = (200, content, "text/plain", cookie)
+		sendResponse(conn, component)
+
+	# get document content
+	if (addr[1] == '_document'):
+		username = addr[2]
+		docname = addr[3]
+
+	if (addr[1] == 'docedit'):
+		username = addr[2]
+		docname = addr[3]
+		doc = pduResult.content.strip()
+		content = content = 'http://localhost:10001/main/%s' % username
+		editContent(docname, doc)
+
+		component = (200, content, mime, cookie)
+		sendResponse(conn, component)
+
+	# creating document
+	if (addr[1] == 'createdoc'):
+		username = pduResult.content.strip().split(":")[0]
+		docname = pduResult.content.strip().split(":")[1]
+		filename = '%s-%s' % (docname, username)
+
+		content = 'http://localhost:10001/edit/%s/%s' % (username, filename)
+		createDocument(username, docname)
+
+		component = (200, content, mime, cookie)
+		sendResponse(conn, component)
+
+	# creating username
+	if (addr[1] == 'signin'):
+
+		username = pduResult.content.strip().lower()
+		content = 'http://localhost:10001/main/%s' % username
+		# communal sharing
+		# createFolder(username)
+
+		component = (200, content, mime, cookie)
+		sendResponse(conn, component)
 
 # handling response, combining content
 def sendResponse(conn, component):
@@ -170,20 +218,6 @@ def setCookie(name, content):
 
 	return cookie
 
-def createDocument(name, address):	
-	# default response is ok
-	response = 200
-
-	# try catch 
-	try:
-		f = open("files/%s-%s.txt" % (name, address), "w+")
-		f.close()
-	except:
-		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
-
-def openDocument(doc):
-	return 
-
 def handler(conn, addr, session):
 
 	#print >> sys.stderr, 'Session : %s' % session
@@ -197,6 +231,49 @@ def handler(conn, addr, session):
 	routingHandler(pduResult, session, conn, addr)
 
 	conn.close()
+
+# ===================================================================
+# editing section
+# ===================================================================
+
+def editContent(filename, content):
+	try:
+		f = open("files/communal/%s.txt" % filename, 'r+')
+		f.write(content)
+		f.close()
+	except:
+		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
+
+def createFolder(username):
+	#create folder of the user if previously not exist
+	if not os.path.exists("files/" + username):
+		os.makedirs("files/" + username)
+
+
+def createDocument(username, name):	
+	# try catch 
+	try:
+		f = open("files/communal/%s-%s.txt" % (name, username), "w+")
+		f.close()
+
+		f = open("files/communal/%s-%s.md" % (name, username), "w+")
+		f.close()
+	except:
+		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
+
+# get all files inside folder	
+def getAllFiles():
+
+	files = []
+	for file in os.listdir("files/communal"):
+		if file.endswith(".txt"):
+			files.append(file)
+
+	return str(files).strip('[]')
+
+def openDocument(doc):
+	return 
+
 
 # ===================================================================
 # main application here

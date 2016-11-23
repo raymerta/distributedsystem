@@ -4,6 +4,7 @@
 		<link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css">
 		<!-- <link rel="stylesheet" type="text/css" href="/style.css"> -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<link rel="shortcut icon" href="http://parallemon.com/favicon.ico">
 	</head>
 	<body>
 		<div class="container">
@@ -16,7 +17,7 @@
 			<table>
 				<tr>
 					<td style="width: 100px;">Username:</td>
-					<td><input id="signinUsername" type="text" name="username"/></td>
+					<td><input id="signinUsername" class="inputtext" type="text" name="username"/></td>
 					<td><input class="btn" type="submit" name="signin" value="START" onclick="signin()" style="margin-left: 20px;"></td>
 				</tr>
 			</table>
@@ -29,12 +30,13 @@
 		function signin(){
 			var http = new XMLHttpRequest();
 			var url = "http://localhost:10001/signin";
-			var params = document.getElementById("signinUsername").value;;
+			var params = document.getElementById("signinUsername").value;
 			http.open("POST", url, true);
 
 			//Send the proper header information along with the request
 			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
+			//capture success response
 			http.onreadystatechange = function() {
 				if (http.readyState == 4 && http.status == 200) {
 					window.location = http.responseText;

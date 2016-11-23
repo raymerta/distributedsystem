@@ -72,10 +72,11 @@ Caveats :
 # REQUIREMENTS : 
 
 Nonetheless, you implementation has to meet some requirements and they are as follows:
+
 1. Real-time. The collaborative editor should be capable of providing the real-time response due to editing and viewing the changes.
 2. Tenacity. User should be able to edit a document over several sessions:
-	a) user should be able to continue editing from where he left the document
-	b) in case there were changes introduced by other users the document must reflect them once a users is editing the document again
+	* user should be able to continue editing from where he left the document
+	* in case there were changes introduced by other users the document must reflect them once a users is editing the document again
 3. Multiple users. The collaborative editor should allow at least three users to work simultaneously.
 4. Textual format. Allowing ASCII text and handling the line breaks.
 
@@ -87,7 +88,7 @@ Nonetheless, you implementation has to meet some requirements and they are as fo
 # REFLECTION 
 
 What is difficult? 
-	* ensure which library can't be used since we do over HTTP over TCP connection, it's hard to redirect component without using built in HTTP library
+* ensure which library can't be used since we do over HTTP over TCP connection, it's hard to redirect component without using built in HTTP library
 
 # REPORT : 
 

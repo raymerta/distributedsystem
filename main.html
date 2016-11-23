@@ -4,33 +4,105 @@
 		<link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css">
 		<!-- <link rel="stylesheet" type="text/css" href="/style.css"> -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<link rel="shortcut icon" href="http://parallemon.com/favicon.ico">
 	</head>
 	<body>
 		<div class="container">
 			<div class="title">
 				<div class="title-left">
 					<h1>COLLABORATIVE EDITING TOOLS</h1>
-					<p>Hello, <span id="username">User</span> welcome to collaborative editing tools</p>
+					<p>Hello, <span id="username">User</span> pick or create the document to start collaborating</p>
 				</div>
 				<div class="title-right">
-					<div class="newdoc" onclick="createDocument()"> NEW DOCUMENT</div>
+					<div class="newdoc" onclick="showDialog()"> NEW DOCUMENT</div>
 				</div>
 				<div class="clearfix"></div>
 			</div>
 
-			<div class="nodoc">You Have No Document Here, Click NEW DOCUMENT to create one</div>
+			<div class="docname">
+				<div class="docname-right" id="docnameContainer" style="display:none;">
+					<table>
+					<tr>
+						<td style="padding-right: 20px;">Insert document name:</td>
+						<td><input id="insertDocName" class="inputtext" type="text" name="docname" size=100/></td>
+						<td><input class="btn" type="submit" value="SAVE" onclick="createDocument()" style="margin-left: 20px;"></td>
+					</tr>
+					</table>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+
+			<div id="filecontainer"></div>
+			
 		</div>
 	</body>
 
 	<script type="text/javascript">
-		document.getElementById("username").innerHTML = document.cookie.split("=")[1];
 
+		var username = document.cookie.split("=")[1];
+
+		document.getElementById("username").innerHTML = username;
+		var startDoc = false;
+
+		function showDialog(){
+
+			if (startDoc == false) {
+				document.getElementById("docnameContainer").style.display="block";
+				startDoc = true;
+			} else {
+				document.getElementById("docnameContainer").style.display="none";
+				startDoc = false;
+			}
+
+		}
+
+		function getFiles(username) {
+			var http = new XMLHttpRequest();
+			var url = "http://localhost:10001/_folder/" + username;
+			http.open("GET", url);
+
+			//capture success response
+			http.onreadystatechange = function() {
+				if (http.readyState == 4 && http.status == 200) {
+					if (http.responseText.trim() == "") {
+						document.getElementById("filecontainer").innerHTML = "<div class=\"nodoc\">You Have No Document Here, Click NEW DOCUMENT to create one</div>";
+					} else {
+						var result = cleanUpFormat(http.responseText);
+						var textresult = "";
+						
+
+						for (var i = 0; i < result.length; i++) {
+							textresult = textresult + '<div class="docname-right" style="margin-bottom: 10px;"><div class="doctitle" style="float:left"><p class="doccomp"><span class="title">' + result[i][0] + '</span> . Created by <span class="username">' + result[i][1] + '</span></p></div><div style="float:right"><a href="http://localhost:10001/edit/' + username +'/' + result[i][0] + '-' + result[i][1] +'">EDIT</a></div><div class="clearfix"></div></div>'
+						}
+
+						document.getElementById("filecontainer").innerHTML = textresult
+					}
+				}
+			}
+
+			http.send();
+		}
 		
+		function cleanUpFormat(text) {
+			var arr = text.split("'");
+			var result = new Array();
+
+			for (var i = 0; i < arr.length; i++) {
+				if (arr[i].length > 4) {
+					var filename = arr[i].split(".")[0];
+					var title = filename.split("-")[0];
+					var author = filename.split("-")[1];
+					result.push([title, author]);
+				}
+			}
+
+			return result;
+		}
 
 		function createDocument() {
 			var http = new XMLHttpRequest();
 			var url = "http://localhost:10001/createdoc";
-			var params = "newdoc"; //sending credentials
+			var params = username + ":" + document.getElementById("insertDocName").value; //sending credentials
 
 			http.withCredentials = true;
 			http.open("POST", url, true);
@@ -38,7 +110,17 @@
 			//Send the proper header information along with the request
 			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
+			//capture success response
+			http.onreadystatechange = function() {
+				if (http.readyState == 4 && http.status == 200) {
+					window.location = http.responseText;
+				}
+			}
+
 			http.send(params);
 		}
+
+		getFiles(username);
+
 	</script>
 </html>

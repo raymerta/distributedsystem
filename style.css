@@ -91,9 +91,19 @@ body {
 	margin: 20px 0;
 }
 
-.title p span {
+p span.username {
 	color: #4206f4;
-	font-weight: bold;	
+	font-weight: bold;
+}
+
+p.doccomp {
+	font-size: 12px;
+}
+
+p.doccomp span.title {
+	font-weight: bold; 
+	font-size: 20px; 
+	color:#2b2b2b;
 }
 
 .title-left{
@@ -136,7 +146,15 @@ body {
 	padding: 20px;
 }
 
-#signinUsername {
+.docname-right {
+	border: solid 1px #ced9dd;
+	padding: 20px;
+	-webkit-border-radius: 7px;
+	border-radius: 7px;
+	margin: 20px 0 30px 0;
+}
+
+.inputtext {
 	width: 100%;
     padding: 12px 20px;
     margin: 8px 0;

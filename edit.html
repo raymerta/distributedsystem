@@ -4,6 +4,7 @@
 		<link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css">
 		<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<link rel="shortcut icon" href="http://parallemon.com/favicon.ico">
   		<script type="text/javascript">
   			tinymce.init({ 
   				selector:'textarea',
@@ -13,37 +14,48 @@
 	</head>
 	<body>
 		<div class="container">
+
 			<div class="title">
-				<h1>COLLABORATIVE EDITING TOOLS</h1>
-				<p>Hello, <span>User</span> pick or create the document to start collaborating</p>
+				<div class="title-left">
+					<h1>COLLABORATIVE EDITING TOOLS</h1>
+					<p>Hello, <span id="username">User</span> you can edit your document without worry here</p>
+				</div>
+				<div class="title-right">
+					<div class="newdoc" onclick="sendMessage()"> QUIT EDITING</div>
+				</div>
+				<div class="clearfix"></div>
 			</div>
 
 			<textarea id="textarea">hello world</textarea>
-			<input type="submit" value="save" name="save" onclick="sendMessage()"> <input type="submit" value="reset" name="reset">
 		</div>
 	</body>
 
 	<script type="text/javascript">
 
+		var username = document.cookie.split("=")[1];
+		document.getElementById("username").innerHTML = username;
+
+		var docsplit = window.location.href.split("/");
+		var docname = docsplit[docsplit.length - 1];
+
 		function sendMessage() {
+
 			var http = new XMLHttpRequest();
-			var url = "http://localhost:10001/edit/test";
+			var url = "http://localhost:10001/docedit/" + username + "/" + docname;
 			var params = tinyMCE.activeEditor.getContent(); // grab the content
 			http.open("POST", url, true);
 
 			//Send the proper header information along with the request
 			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
+			//capture success response
+			http.onreadystatechange = function() {
+				if (http.readyState == 4 && http.status == 200) {
+					window.location = http.responseText;
+				}
+			}
+
 			http.send(params);
-		}
-
-		function grabContent() {
-
-			// Get the HTML contents of the currently active editor
-			// console.debug(tinyMCE.activeEditor.getContent());
-
-			// alert(tinyMCE.activeEditor.getContent());
-
 		}
 	</script>
 </html>
