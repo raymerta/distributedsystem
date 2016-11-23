@@ -21,7 +21,7 @@
 					<p>Hello, <span class="username" id="username">User</span> you can edit your document without worry here</p>
 				</div>
 				<div class="title-right">
-					<div class="newdoc" onclick="sendMessage()"> QUIT EDITING</div>
+					<div class="newdoc" onclick="returnToDocChoose()"> QUIT EDITING</div>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -38,15 +38,28 @@
 			var isDelete = keyCode == 46
 			var isLetter = (keyCode >= 65) && (keyCode <= 90);
 			var isNumber = (keyCode >= 48) && (keyCode <= 57);
-			var isSpecialCharacter = (keyCode == 32) && (keyCode == 13); //space and enter
+			var isSpecialCharacter = (keyCode == 32) || (keyCode == 13); //space and enter
+			var isEnter = keyCode == 13
+			var isSpace = keyCode == 32
 			var index = document.getElementById("textarea").selectionStart;
-			if (isLetter || isNumber || isSpecialCharacter) {
-				sendMessage(index, event.key);	 
+			if (isEnter) {
+				// sendMessage(index, '\n');
+			}	 
+
+			if (isSpace) {
+				sendMessage(index, 'Space');
 			}
+
+			if (isLetter || isNumber || isEnter ) {
+				sendMessage(index, event.key);
+
+			}
+
 			if (isBackspace) {
 				index = index - 1;
 				sendMessage(index);	
-			} 
+			}
+
 			if (isDelete) {
 				sendMessage(index);
 			}
@@ -81,6 +94,11 @@
 			http.send();
 		}
 
+		function returnToDocChoose() {
+			var url = "http://localhost:10001/main/" + username;
+			window.location.href = url
+
+		}
 		// if the char equals to "", it means deletion in position index
 		// otherwise it's insertion
 		function sendMessage(index, char='') {

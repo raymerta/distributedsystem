@@ -151,11 +151,6 @@ def routingHandler(pduResult, session, conn, addr):
 		doc = pduResult.content.strip()
 
 
-		print >> sys.stderr, "-------------------------------------------"
-		print >> sys.stderr, "-------------------------------------------" 
-		print >> sys.stderr, doc.split() 
-		print >> sys.stderr, "-------------------------------------------"
-		print >> sys.stderr, "-------------------------------------------"
 
 		content = content = 'http://localhost:10001/main/%s' % username
 		editContent(docname, doc)
@@ -262,8 +257,51 @@ def getDocContent(filename):
 
 def editContent(filename, content):
 	try:
-		f = open("files/communal/%s.txt" % filename, 'w')
-		f.write(content)
+		f = open("files/communal/%s.txt" % filename, 'r+')
+		# cont
+
+		file_text = f.read().replace('\n', '\n') # TODO: CHANGE!!!!!!!!!!!!
+
+
+
+		content = content.split()
+		
+
+		if (len(content) == 2): # insert char
+			if content[1] == "Enter":
+				content[1] = '\n'
+
+			if content[1] == "Space":
+				content[1] = ' '
+
+			ind, char = int(content[0]), content[1]
+			print >> sys.stderr, 'before err 1: ', file_text 
+			file_text = file_text[:ind] + char + file_text[ind:]
+			print >> sys.stderr, 'before err 1: ', file_text
+		
+		elif (len(content) == 1): # delete char
+			print >> sys.stderr, 'before err 2'
+			ind = int(content[0])
+			file_text = file_text[:ind] + file_text[ind + 1:]
+			print >> sys.stderr, 'before err 2: ', file_text
+
+		else:
+			print >> sys.stderr, 'before err 3'
+
+			raise IndexError("BAD LEN OF CONTENT!")
+
+
+
+		print >> sys.stderr, "-------------------------------------------"
+		print >> sys.stderr, "-------------------------------------------" 
+		print >> sys.stderr, file_text 
+		print >> sys.stderr, "-------------------------------------------"
+		print >> sys.stderr, "-------------------------------------------"
+
+
+		f.seek(0)
+		f.write(file_text)
+		f.truncate()
 		f.close()
 	except:
 		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
