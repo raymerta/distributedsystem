@@ -36,13 +36,13 @@ Asynchronous or lock-free strategies (using document versions)
 
 Server side - Python :
 * [DONE] establish connection
-* receive updates
-	* convert string received into object
-	* routing request to its respective functionality
-* send response
+* [DONE] receive updates
+	* [DONE] convert string received into object
+	* [DONE] routing request to its respective functionality
+* [DONE]send response
 * routing logic. List of route : 
-	* POST create document
-	* GET document content
+	* [DONE] POST create document
+	* [DONE] GET document content
 * locking logic
 * mergin logic
 
@@ -51,12 +51,12 @@ Client side :
 * [DONE] establish connection 
 * send updates
 	* [DONE] sending identity
-	* creating document
-	* asking to open document
+	* [DONE] creating document
+	* [DONE] asking to open document
 * receive updates
-	* receiving ack that document is created
-	* receiving ack that document can be opened
-	* receiving document content
+	* [DONE] receiving ack that document is created
+	* [DONE] receiving ack that document can be opened
+	* [DONE] receiving document content
 * editing logic
 
 Nice to have / can be severe problem later: 
@@ -67,7 +67,7 @@ Nice to have / can be severe problem later:
 
 Caveats :
 * cross-site Access-Control requests should be made using credentials such as cookies, authorization headers or TLS client certificates
-
+* error handling & testing
 
 # REQUIREMENTS : 
 
@@ -84,6 +84,10 @@ Nonetheless, you implementation has to meet some requirements and they are as fo
 
 * server.py - do most of the things here
 * PDU.py - create object from http response
+
+# TEST CASE SCENARIO
+
+write test case here
 
 # REFLECTION 
 

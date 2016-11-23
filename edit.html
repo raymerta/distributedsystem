@@ -18,7 +18,7 @@
 			<div class="title">
 				<div class="title-left">
 					<h1>COLLABORATIVE EDITING TOOLS</h1>
-					<p>Hello, <span id="username">User</span> you can edit your document without worry here</p>
+					<p>Hello, <span class="username" id="username">User</span> you can edit your document without worry here</p>
 				</div>
 				<div class="title-right">
 					<div class="newdoc" onclick="sendMessage()"> QUIT EDITING</div>
@@ -26,7 +26,7 @@
 				<div class="clearfix"></div>
 			</div>
 
-			<textarea id="textarea">hello world</textarea>
+			<textarea id="textarea"></textarea>
 		</div>
 	</body>
 
@@ -37,6 +37,22 @@
 
 		var docsplit = window.location.href.split("/");
 		var docname = docsplit[docsplit.length - 1];
+
+		function getContent() {
+			var http = new XMLHttpRequest();
+			var url = "http://localhost:10001/_document/" + docname;
+			http.open("GET", url);
+
+			//capture success response
+			http.onreadystatechange = function() {
+				if (http.readyState == 4 && http.status == 200) {
+					var content = http.responseText + "";
+					tinyMCE.activeEditor.setContent(http.responseText);
+				}
+			}
+
+			http.send();
+		}
 
 		function sendMessage() {
 
@@ -57,5 +73,7 @@
 
 			http.send(params);
 		}
+
+		getContent();
 	</script>
 </html>

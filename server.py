@@ -137,8 +137,12 @@ def routingHandler(pduResult, session, conn, addr):
 
 	# get document content
 	if (addr[1] == '_document'):
-		username = addr[2]
-		docname = addr[3]
+		docname = addr[2]
+		content = getDocContent(docname)
+
+		component = (200, content, "text/plain", cookie)
+		sendResponse(conn, component)		
+
 
 	if (addr[1] == 'docedit'):
 		username = addr[2]
@@ -235,6 +239,17 @@ def handler(conn, addr, session):
 # ===================================================================
 # editing section
 # ===================================================================
+
+def getDocContent(filename):
+	content = ''
+	try:
+		f = open("files/communal/%s.txt" % filename, 'r')
+		content = f.read()
+		f.close()
+	except:
+		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
+
+	return content
 
 def editContent(filename, content):
 	try:
