@@ -150,6 +150,13 @@ def routingHandler(pduResult, session, conn, addr):
 
 		doc = pduResult.content.strip()
 
+
+		print >> sys.stderr, "-------------------------------------------"
+		print >> sys.stderr, "-------------------------------------------" 
+		print >> sys.stderr, doc.split() 
+		print >> sys.stderr, "-------------------------------------------"
+		print >> sys.stderr, "-------------------------------------------"
+
 		content = content = 'http://localhost:10001/main/%s' % username
 		editContent(docname, doc)
 

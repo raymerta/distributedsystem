@@ -34,14 +34,24 @@
 
 		function onKeyDown() {
 			var keyCode = event.keyCode;
-			var isBackspaceOrDelete = (keyCode == 8) || (keyCode == 46);
+			var isBackspace = keyCode == 8
+			var isDelete = keyCode == 46
 			var isLetter = (keyCode >= 65) && (keyCode <= 90);
 			var isNumber = (keyCode >= 48) && (keyCode <= 57);
 			var isSpecialCharacter = (keyCode == 32) && (keyCode == 13); //space and enter
 			var index = document.getElementById("textarea").selectionStart;
-			if (isBackspaceOrDelete || isLetter || isNumber || isSpecialCharacter) {
-				 sendMessage();
+			if (isLetter || isNumber || isSpecialCharacter) {
+				sendMessage(index, event.key);	 
 			}
+			if (isBackspace) {
+				index = index - 1;
+				sendMessage(index);	
+			} 
+			if (isDelete) {
+				sendMessage(index);
+			}
+			
+				
 		}
 
 		var username = document.cookie.split("=")[1];
@@ -73,7 +83,7 @@
 
 		// if the char equals to "", it means deletion in position index
 		// otherwise it's insertion
-		function sendMessage(index, char="") {
+		function sendMessage(index, char='') {
 			// var index = 1;
 			// var char = 'A';
 			var http = new XMLHttpRequest();
