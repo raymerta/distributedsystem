@@ -100,7 +100,7 @@ def routingHandler(pduResult, session, conn, addr):
 
 	# edit page style
 	elif (addr[1] == 'edit'):
-		if (len(addr) != 4): 
+		if (len(addr) != 5): 
 			fsource = 'edit.html'
 			f = open(fsource, 'r')
 			mime = getMime(fsource)
@@ -281,7 +281,7 @@ def getDocContent(filename):
 
 def editContent(filename, content):
 	try:
-		f = open("files/communal/%s.txt" % filename, 'r+')
+		f = open("files/communal/%s.txt" % filename, 'w')
 		f.write(content)
 		f.close()
 	except:
@@ -303,7 +303,7 @@ def createUserLog(username):
 		f = open("files/communal/user.log", "w+")
 		content = f.read()
 		arrContent = content.split(";")
-		if !userFound(username, arrContent)
+		if (userFound(username, arrContent) == False):
 			content = content + username + ";"
 
 		f.write(content)
@@ -315,7 +315,7 @@ def userFound(username, userList):
 	exist = False
 
 	for user in userList:
-		if (user == username)
+		if (user == username):
 			exist = True
 
 	return exist
