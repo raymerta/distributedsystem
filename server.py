@@ -68,7 +68,7 @@ def socketServer(serverAddress):
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(serverAddress)
     sock.listen(5)
-    return sock	
+    return sock
 
 # handling routing TODO
 def routingHandler(pduResult, session, conn, addr):
@@ -80,10 +80,10 @@ def routingHandler(pduResult, session, conn, addr):
 	fsource = ''
 	component = ''
 
-	#not working for god sake 
+	#not working for god sake
 	cookie = setCookie("__session", session)
 	mime = 'text/html'
-	
+
 
 	# refactor this is have time
 
@@ -161,13 +161,17 @@ def routingHandler(pduResult, session, conn, addr):
 		content = getDocContent(docname)
 
 		component = (200, content, "text/plain", cookie)
-		sendResponse(conn, component)		
+		sendResponse(conn, component)
 
 
 	elif (addr[1] == 'docedit'):
 		username = addr[2]
 		docname = addr[3]
+
 		doc = pduResult.content.strip()
+
+
+
 		content = content = 'http://localhost:10001/main/%s' % username
 		editContent(docname, doc)
 
@@ -224,7 +228,7 @@ def parseRequest(conn):
 		return ''
 
 	line = data[0:data.find("\r")]
-	
+
 	#print line
 	#header format = data[0:data.find("\r\n\r\n")]
 	# print >> sys.stderr, "==================================================================="
@@ -241,7 +245,7 @@ def setSession():
 
 def setCookie(name, content):
 	# sample: Set-Cookie: id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly
-	expiresYear = int(time.strftime("%Y")) + 10 
+	expiresYear = int(time.strftime("%Y")) + 10
 	expiresMonth = time.strftime("%a, %d %b")
 	expiresTime = time.strftime("%X")
 
@@ -281,13 +285,60 @@ def getDocContent(filename):
 
 def editContent(filename, content):
 	try:
-		f = open("files/communal/%s.txt" % filename, 'w')
-		f.write(content)
+		f = open("files/communal/%s.txt" % filename, 'r+')
+		# cont
+
+		file_text = f.read().replace('\n', '\n') # TODO: CHANGE!!!!!!!!!!!!
+		content = content.split()
+		
+
+		if (len(content) == 2): # insert char
+			if content[1] == "Enter":
+				content[1] = '\n'
+
+			if content[1] == "Space":
+				content[1] = ' '
+
+			ind, char = int(content[0]), content[1]
+			print >> sys.stderr, 'before err 1: ', file_text 
+			file_text = file_text[:ind] + char + file_text[ind:]
+			print >> sys.stderr, 'before err 1: ', file_text
+		
+		elif (len(content) == 1): # delete char
+			print >> sys.stderr, 'before err 2'
+			ind = int(content[0])
+			file_text = file_text[:ind] + file_text[ind + 1:]
+			print >> sys.stderr, 'before err 2: ', file_text
+
+		else:
+			print >> sys.stderr, 'before err 3'
+
+			raise IndexError("BAD LEN OF CONTENT!")
+
+
+
+		print >> sys.stderr, "-------------------------------------------"
+		print >> sys.stderr, "-------------------------------------------" 
+		print >> sys.stderr, file_text 
+		print >> sys.stderr, "-------------------------------------------"
+		print >> sys.stderr, "-------------------------------------------"
+
+
+		f.seek(0)
+		f.write(file_text)
+		f.truncate()
 		f.close()
 	except:
 		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
 
+def createFolder(username):
+	#create folder of the user if previously not exist
+	if not os.path.exists("files/" + username):
+		os.makedirs("files/" + username)
+
+
 def createDocument(username, name):
+	# try catch
 	try:
 		f = open("files/communal/%s-%s.txt" % (name, username), "w+")
 		f.close()
@@ -296,6 +347,7 @@ def createDocument(username, name):
 		f.close()
 	except:
 		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
+
 
 
 def createUserLog(username):	
@@ -331,24 +383,23 @@ def getAllFiles():
 	return str(files).strip('[]')
 
 
-
 # ===================================================================
 # main application here
 # ===================================================================
 def main():
-	
+
 	server = socketServer(serverAddress)
 	print >> sys.stderr, 'server is starting on %s port %s' % serverAddress
 
-	#connected		
-	try:	
-		while True: 	
+	#connected
+	try:
+		while True:
 			conn, addr = server.accept()
 			session = setSession()
 
 			# checking connected client ip address
 			print >> sys.stderr, 'client connected with ip :  %s' % str(addr)
-	
+
 			#start threading
 			thrd = threading.Thread(target=handler, args=(conn, addr, session))
 
@@ -361,10 +412,10 @@ def main():
 	# handling keyboard interrupt
 	except KeyboardInterrupt:
 		print >> sys.stderr, 'keyboardInterrupt exception'
-				
-    	     
+
+
 	server.close()
-	
+
 
 if __name__ == '__main__':
     main()

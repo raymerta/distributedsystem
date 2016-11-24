@@ -2,15 +2,15 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="http://parallemon.com/style.css">
-		<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+		<!-- <script src="//cdn.tinymce.com/4/tinymce.min.js"></script> -->
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 		<link rel="shortcut icon" href="http://parallemon.com/favicon.ico">
-  		<script type="text/javascript">
-  			tinymce.init({ 
+  		<!-- <script type="text/javascript">
+  			tinymce.init({
   				selector:'textarea',
   				height: 300
   			});
-  		</script>
+  		</script> -->
   		<title>COLLABORATIVE EDITING TOOLS</title>
 	</head>
 	<body>
@@ -22,16 +22,51 @@
 					<p>Hello, <span class="username" id="username">User</span> you can edit your document without worry here</p>
 				</div>
 				<div class="title-right">
-					<div class="newdoc" onclick="sendMessage()"> QUIT EDITING</div>
+					<div class="newdoc" onclick="returnToDocChoose()"> QUIT EDITING</div>
 				</div>
 				<div class="clearfix"></div>
 			</div>
 
-			<textarea id="textarea"></textarea>
+			<textarea id="textarea" onkeydown="onKeyDown()"></textarea>
 		</div>
 	</body>
 
 	<script type="text/javascript">
+
+		function onKeyDown() {
+			var keyCode = event.keyCode;
+			var isBackspace = keyCode == 8
+			var isDelete = keyCode == 46
+			var isLetter = (keyCode >= 65) && (keyCode <= 90);
+			var isNumber = (keyCode >= 48) && (keyCode <= 57);
+			var isSpecialCharacter = (keyCode == 32) || (keyCode == 13); //space and enter
+			var isEnter = keyCode == 13
+			var isSpace = keyCode == 32
+			var index = document.getElementById("textarea").selectionStart;
+			if (isEnter) {
+				// sendMessage(index, '\n');
+			}	 
+
+			if (isSpace) {
+				sendMessage(index, 'Space');
+			}
+
+			if (isLetter || isNumber || isEnter ) {
+				sendMessage(index, event.key);
+
+			}
+
+			if (isBackspace) {
+				index = index - 1;
+				sendMessage(index);	
+			}
+
+			if (isDelete) {
+				sendMessage(index);
+			}
+			
+				
+		}
 
 		var username = document.cookie.split("=")[1];
 		document.getElementById("username").innerHTML = username;
@@ -48,31 +83,45 @@
 			http.onreadystatechange = function() {
 				if (http.readyState == 4 && http.status == 200) {
 					var content = http.responseText + "";
-					tinyMCE.activeEditor.setContent(http.responseText);
+						//tinyMCE.activeEditor.setContent(content);
+				  document.getElementById('textarea').value = content
 				}
 			}
 
 			http.send();
 		}
 
-		function sendMessage() {
+		function returnToDocChoose() {
+			var url = "http://localhost:10001/main/" + username;
+			window.location.href = url
 
+		}
+		// if the char equals to "", it means deletion in position index
+		// otherwise it's insertion
+		function sendMessage(index, char='') {
+			// var index = 1;
+			// var char = 'A';
 			var http = new XMLHttpRequest();
 			var url = "http://localhost:10001/docedit/" + username + "/" + docname;
-			var params = tinyMCE.activeEditor.getContent(); // grab the content
+			//var params = tinyMCE.activeEditor.getContent(); // grab the content
 			http.open("POST", url, true);
 
 			//Send the proper header information along with the request
 			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
+			otMessage = index + " " + char // Operation Transformation Message
 			//capture success response
+
 			http.onreadystatechange = function() {
-				if (http.readyState == 4 && http.status == 200) {
-					window.location = http.responseText;
+				if (http.readyState == 4 && http.status != 200) {
+					console.log("error occurred " + index + " " + char)
+					sendMessage(index, char);
 				}
 			}
 
-			http.send(params);
+			
+
+			http.send(otMessage);
 		}
 
 		getContent();
