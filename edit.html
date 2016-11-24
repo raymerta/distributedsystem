@@ -26,7 +26,7 @@
 				<div class="clearfix"></div>
 			</div>
 
-			<textarea id="textarea" onkeydown="onKeyDown()"></textarea>
+			<textarea id="textarea" style="width:80%; height:50vh; float:center;" onkeydown="onKeyDown()"></textarea>
 		</div>
 	</body>
 
@@ -43,7 +43,7 @@
 			var isSpace = keyCode == 32
 			var index = document.getElementById("textarea").selectionStart;
 			if (isEnter) {
-				// sendMessage(index, '\n');
+			    //sendMessage(index, '\n');
 			}	 
 
 			if (isSpace) {
@@ -95,6 +95,12 @@
 			window.location.href = url
 
 		}
+
+		function error_handle_function(index, char) {
+			console.log("error occurred " + index + " " + char)
+		}
+
+
 		// if the char equals to "", it means deletion in position index
 		// otherwise it's insertion
 		function sendMessage(index, char='') {
@@ -111,18 +117,58 @@
 			otMessage = index + " " + char // Operation Transformation Message
 			//capture success response
 
-			http.onreadystatechange = function() {
-				if (http.readyState == 4 && http.status != 200) {
-					console.log("error occurred " + index + " " + char)
-					sendMessage(index, char);
-				}
+
+
+			http.onreadystatechange=function() {
+				//http.onerror = function(){sendMessage(index, char)}  
+
+				if (http.status != 200) {
+ 					console.log("error occurred " + index + " " + char)
+ 					sendMessage(index, char)
+ 					// sendMessage(index, char);
+ 					//location.reload()
+					// http.sendMultipart(object);
+  				} else {
+
+  				}
+  				
 			}
+			
+			http.send(otMessage);			        
+			
+			//http.sendMultipart(object);
 
 			
 
-			http.send(otMessage);
+			
 		}
 
+
 		getContent();
+		
+	function requestChangesFromServ(i) {
+		getContent();
+
+	}
+
+	function repeatedTimeout(func,times,duration) {
+	    var args = Array.prototype.slice.call(arguments).splice(3);
+	    var i = 0;
+	    args.push(i)
+	    var wrap = function () {
+	     if(args[args.length - 1] >= times) // if false
+	       window.clearInterval(wrap)
+	      else {
+
+	         func.apply(this,args)
+	         args[args.length - 1]++
+
+	       }
+	    }
+	    
+	    window.setInterval(wrap,duration)
+	}
+	repeatedTimeout(requestChangesFromServ,Number.MAX_VALUE,10000)
+
 	</script>
 </html>

@@ -143,14 +143,20 @@ def routingHandler(pduResult, session, conn, addr):
 		component = (200, content, "text/plain", cookie)
 		sendResponse(conn, component)
 
+	# OT IS HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+	if (addr[1] == '_reqchange'):
+		docname = addr[2]
+		content = getDocContent(docname)
+
+		component = (200, content, "text/plain", cookie)
+		sendResponse(conn, component)
+
 
 	if (addr[1] == 'docedit'):
 		username = addr[2]
 		docname = addr[3]
 
 		doc = pduResult.content.strip()
-
-
 
 		content = content = 'http://localhost:10001/main/%s' % username
 		editContent(docname, doc)
@@ -232,7 +238,7 @@ def handler(conn, addr, session):
 
 	# parsing uri request
 	pduResult = parseRequest(conn)
-	print pduResult
+	print pduResult.content
 	#print >> sys.stderr, 'URI accessed : %s' % pduResult.uri
 
 	# handling URI and print suitable pages
@@ -275,9 +281,9 @@ def editContent(filename, content):
 				content[1] = ' '
 
 			ind, char = int(content[0]), content[1]
-			print >> sys.stderr, 'before err 1: ', file_text 
+			#print >> sys.stderr, 'before err 1: ', file_text 
 			file_text = file_text[:ind] + char + file_text[ind:]
-			print >> sys.stderr, 'before err 1: ', file_text
+			#print >> sys.stderr, 'before err 1: ', file_text
 		
 		elif (len(content) == 1): # delete char
 			print >> sys.stderr, 'before err 2'
@@ -287,7 +293,8 @@ def editContent(filename, content):
 
 		else:
 			print >> sys.stderr, 'before err 3'
-
+			print >> sys.stderr, content
+			print >> sys.stderr, 'len: ' + len(content)
 			raise IndexError("BAD LEN OF CONTENT!")
 
 
