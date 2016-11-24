@@ -107,6 +107,7 @@ def routingHandler(pduResult, session, conn, addr):
 			content = f.read()
 			f.close()
 			component = (200, content, mime, cookie)
+
 		else : 
 			fsource = '404.html'
 			f = open(fsource, 'r')
@@ -164,7 +165,7 @@ def routingHandler(pduResult, session, conn, addr):
 		sendResponse(conn, component)
 
 	# OT IS HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-	if (addr[1] == '_reqchange'):
+	elif (addr[1] == '_reqchange'):
 		docname = addr[2]
 		content = getDocContent(docname)
 
