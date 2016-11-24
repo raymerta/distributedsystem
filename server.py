@@ -37,9 +37,10 @@ Location: %s
 responseHeaders[404] =\
 """HTTP/1.0 404 Not Found
 Server: ws30
-Content-type: text/plain
+Content-type: %s
+Set-Cookie: %s
 
-%s not found
+%s
 """
 # TODO Handling local CSS and Javascript file
 
@@ -77,11 +78,14 @@ def routingHandler(pduResult, session, conn, addr):
 
 	content = ''
 	fsource = ''
+	component = ''
 
 	#not working for god sake
 	cookie = setCookie("__session", session)
 	mime = 'text/html'
 
+
+	# refactor this is have time
 
 	# home page
 	if (addr[1] == ''):
@@ -95,29 +99,45 @@ def routingHandler(pduResult, session, conn, addr):
 		sendResponse(conn, component)
 
 	# edit page style
-	if (addr[1] == 'edit'):
-		fsource = 'edit.html'
-		f = open(fsource, 'r')
-		mime = getMime(fsource)
-		content = f.read()
-		f.close()
+	elif (addr[1] == 'edit'):
+		if (len(addr) != 5): 
+			fsource = 'edit.html'
+			f = open(fsource, 'r')
+			mime = getMime(fsource)
+			content = f.read()
+			f.close()
+			component = (200, content, mime, cookie)
+		else : 
+			fsource = '404.html'
+			f = open(fsource, 'r')
+			mime = getMime(fsource)
+			content = f.read()
+			f.close()
+			component = (404, content, mime, cookie)
 
-		component = (200, content, mime, cookie)
 		sendResponse(conn, component)
 
-	# main page
-	if (addr[1] == 'main'):
-		fsource = 'main.html'
-		f = open(fsource, 'r')
-		mime = getMime(fsource)
-		content = f.read()
-		f.close()
-
-		component = (200, content, mime, cookie)
+	# main page 
+	elif (addr[1] == 'main'):
+		if (len(addr) != 4): 
+			fsource = 'main.html'
+			f = open(fsource, 'r')
+			mime = getMime(fsource)
+			content = f.read()
+			f.close()
+			component = (200, content, mime, cookie)
+		else : 
+			fsource = '404.html'
+			f = open(fsource, 'r')
+			mime = getMime(fsource)
+			content = f.read()
+			f.close()
+			component = (404, content, mime, cookie)
+		
 		sendResponse(conn, component)
 
 	# css
-	if (addr[1] == 'style.css'):
+	elif (addr[1] == 'style.css'):
 		fsource = 'style.css'
 		f = open(fsource, 'r')
 		mime = getMime(fsource)
@@ -128,7 +148,7 @@ def routingHandler(pduResult, session, conn, addr):
 		sendResponse(conn, component)
 
 	# get files inside folder
-	if (addr[1] == '_folder'):
+	elif (addr[1] == '_folder'):		
 		username = addr[2]
 		content = getAllFiles()
 
@@ -136,7 +156,7 @@ def routingHandler(pduResult, session, conn, addr):
 		sendResponse(conn, component)
 
 	# get document content
-	if (addr[1] == '_document'):
+	elif (addr[1] == '_document'):
 		docname = addr[2]
 		content = getDocContent(docname)
 
@@ -152,7 +172,7 @@ def routingHandler(pduResult, session, conn, addr):
 		sendResponse(conn, component)
 
 
-	if (addr[1] == 'docedit'):
+	elif (addr[1] == 'docedit'):
 		username = addr[2]
 		docname = addr[3]
 
@@ -165,7 +185,7 @@ def routingHandler(pduResult, session, conn, addr):
 		sendResponse(conn, component)
 
 	# creating document
-	if (addr[1] == 'createdoc'):
+	elif (addr[1] == 'createdoc'):
 		username = pduResult.content.strip().split(":")[0]
 		docname = pduResult.content.strip().split(":")[1]
 		filename = '%s-%s' % (docname, username)
@@ -177,14 +197,22 @@ def routingHandler(pduResult, session, conn, addr):
 		sendResponse(conn, component)
 
 	# creating username
-	if (addr[1] == 'signin'):
+	elif (addr[1] == 'signin'):
 
 		username = pduResult.content.strip().lower()
 		content = 'http://localhost:10001/main/%s' % username
-		# communal sharing
-		# createFolder(username)
+		createUserLog(username)
 
 		component = (200, content, mime, cookie)
+		sendResponse(conn, component)
+
+	else:
+		fsource = '404.html'
+		f = open(fsource, 'r')
+		mime = getMime(fsource)
+		content = f.read()
+		f.close()
+		component = (404, content, mime, cookie)
 		sendResponse(conn, component)
 
 # handling response, combining content
@@ -267,9 +295,6 @@ def editContent(filename, content):
 		# cont
 
 		file_text = f.read().replace('\n', '\n') # TODO: CHANGE!!!!!!!!!!!!
-
-
-
 		content = content.split()
 		
 
@@ -330,7 +355,31 @@ def createDocument(username, name):
 	except:
 		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
 
-# get all files inside folder
+
+
+def createUserLog(username):	
+	try:
+		f = open("files/communal/user.log", "w+")
+		content = f.read()
+		arrContent = content.split(";")
+		if (userFound(username, arrContent) == False):
+			content = content + username + ";"
+
+		f.write(content)
+		f.close()
+	except:
+		print >> sys.stderr, 'Error : %s' % sys.exc_info()[0]
+
+def userFound(username, userList):
+	exist = False
+
+	for user in userList:
+		if (user == username):
+			exist = True
+
+	return exist
+
+# get all files inside folder	
 def getAllFiles():
 
 	files = []
@@ -339,9 +388,6 @@ def getAllFiles():
 			files.append(file)
 
 	return str(files).strip('[]')
-
-def openDocument(doc):
-	return
 
 
 # ===================================================================

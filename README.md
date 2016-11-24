@@ -41,7 +41,7 @@ Server side - Python :
 	* [DONE] convert string received into object
 	* [DONE] routing request to its respective functionality
 * [DONE]send response
-* routing logic. List of route : 
+* [DONE]routing logic. List of route : 
 	* [DONE] POST create document
 	* [DONE] GET document content
 * locking logic
@@ -50,11 +50,11 @@ Server side - Python :
 
 Client side :
 * [DONE] establish connection 
-* send updates
+* [DONE] send updates
 	* [DONE] sending identity
 	* [DONE] creating document
 	* [DONE] asking to open document
-* receive updates
+* [DONE] receive updates
 	* [DONE] receiving ack that document is created
 	* [DONE] receiving ack that document can be opened
 	* [DONE] receiving document content
@@ -65,6 +65,11 @@ Nice to have / can be severe problem later:
 * keep all header file in one place to avoid copy paste
 * restrict username character and size
 * restrict hotlinking to certain URL
+* [DONE] handle URL hijacking
+* [DONE] handle nonexistent user in URL hijacking
+* see who is online
+* remove non existent files from repo
+
 
 Caveats :
 * cross-site Access-Control requests should be made using credentials such as cookies, authorization headers or TLS client certificates
